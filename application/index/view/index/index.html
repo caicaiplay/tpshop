@@ -1,0 +1,26 @@
+{extend name="common/father" /}
+{block name="title"}{$catename}{/block}
+{block name="lists"}
+<div class="col-sm-12 col-md-8">
+    <div class="page-header h3">{$catename|default="博文"}列表</div>
+    <div class="article-list">
+        {volist name="articles" id="vo"}
+        <div class="article-list-item">
+            <a href="{:url('index/article/content',['id' => $vo.id])}" class="title">{$vo.title}</a>
+            <div class="info">
+                <span class="author">作者：{$vo.admin.nickname}</span>-
+                <span class="time">发布时间：{$vo.create_time}</span>-
+                <span class="read">阅读：{$vo.read_num}</span>-
+                <span class="comment">评论：{$vo.com_num}</span>
+            </div>
+            <div style="margin-top: 10px">
+                <p>{$vo.desc}</p>
+            </div>
+        </div>
+        {/volist}
+    </div>
+    <nav class="">
+        {$articles|raw}
+    </nav>
+</div>
+{/block}

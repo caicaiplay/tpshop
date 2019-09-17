@@ -1,0 +1,119 @@
+{include file="public/_header" /}
+<!-- /Navbar -->
+<!-- Main Container -->
+<div class="main-container container-fluid">
+    <!-- Page Container -->
+    <div class="page-container">
+
+        <!-- Page Sidebar -->
+        {include file="public/_left" /}
+        <!-- /Page Sidebar -->
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- Page Breadcrumb -->
+            <div class="page-breadcrumbs">
+                <ul class="breadcrumb">
+                    <li class="active">
+                        <i class="fa fa-home"></i>&nbsp;管理员修改
+                    </li>
+                    <li>
+                        管理员修改
+                    </li>
+                </ul>
+            </div>
+            <!-- /Page Breadcrumb -->
+            <!-- Page Body -->
+            <div class="page-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="widget radius-bordered">
+                            <div class="widget-header bordered-bottom bordered-themeprimary">
+                                <span class="widget-caption">管理员修改</span>
+                            </div>
+                            <div class="widget-body">
+                                <form class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right">管理员名 :</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" name="username" value="{$adminInfo.username}" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right">原密码 :</label>
+                                        <div class="col-sm-6">
+                                            <input type="password" class="form-control" name="oldpass" placeholder="管理员密码" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right">新密码 :</label>
+                                        <div class="col-sm-6">
+                                            <input type="password" class="form-control" name="password" placeholder="新密码" />
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="id" value="{$adminInfo.id}" />
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right">昵称 :</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" name="nickname" value="{$adminInfo.nickname}" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right">邮箱 :</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" name="email" value="{$adminInfo.email}" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-2 col-sm-10">
+                                            <button type="submit" class="btn btn-primary" id="adminedit">确认修改</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Page Body -->
+        </div>
+        <!-- /Page Content -->
+
+    </div>
+    <!-- /Page Container -->
+    <!-- Main Container -->
+
+</div>
+{include file="public/_js" /}
+<script>
+    $(function () {
+        $('#adminedit').click(function () {
+            $.ajax({
+                url:"{:url('admin/admin/edit')}",
+                type:'post',
+                data:$('form').serialize(),
+                dataType:'json',
+                success:function (data) {
+                    if (data.code == 1) {
+                        layer.msg(data.msg, {
+                            icon:6,
+                            time:1000
+                        }, function () {
+                            location.href = data.url;
+                        });
+                    } else {
+                        layer.open({
+                            title:'修改失败',
+                            content: data.msg,
+                            icon: 5,
+                            anim: 6
+                        });
+                    };
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+<!--  /Body -->
+</html>

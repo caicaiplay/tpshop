@@ -1,0 +1,87 @@
+{extend name="common/father" /}
+{block name="title"}{$articleInfo.title}{/block}
+{block name="poster"}{/block}
+{block name="lists"}
+<div class="col-sm-12 col-md-8">
+    <h1 class="article-title">{$articleInfo.title}</h1>
+    <div class="status">{$articleInfo.read_num}阅读-{$articleInfo.com_num}评论-作者：{$articleInfo.admin.nickname}
+        {volist name="$articleInfo.tags|strToArr" id='vo'}
+        <span class="label label-default">{$vo}</span>
+        {/volist}
+    </div>
+    <div class="article-content">
+        <blockquote>
+            {$articleInfo.desc}
+        </blockquote>
+        {$articleInfo.content|raw}
+    </div>
+    <div class="article-comment">
+        <div class="page-header"><b>相关评论</b></div>
+        <div class="comment-content">
+            <form action="#">
+                <input type="hidden" name="member_id" value="{:session('member.id')}">
+                <input type="hidden" name="article_id" value="{$articleInfo.id}">
+                <div class="form-group">
+                    <textarea class="form-control" id="comment" name="comment" rows="5" cols=""></textarea>
+                </div>
+                <div class="form-group pull-right">
+                    <button type="submit" class="btn btn-primary" id="comments">吐槽两句</button>
+                </div>
+            </form>
+        </div>
+        <div class="clearfix"></div>
+        {volist name="$comms" id="vo" empty="暂时没有评论"}
+        <div class="comment-list">
+            <div class="comment-list-item">
+                <div class="info">{$vo.member.nickname}<small>{$vo.create_time}</small></div>
+                <div class="content">{$vo.content}</div>
+            </div>
+        </div>
+        {/volist}
+        {$comms|raw}
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script>
+    $(function () {
+        $('.aff').addClass('affix');
+
+        $("#comments").click(function () {
+            if ("{:session('?member.id')}") {
+                $.ajax({
+                    url:"{:url('index/article/comment')}",
+                    type: 'post',
+                    data: $('form').serialize(),
+                    dataType: 'json',
+                    success:function (data) {
+                        if (data.code == 1) {
+                            layer.msg(data.msg, {
+                                icon:6,
+                                time:1000
+                            }, function () {
+                                location.reload();
+                            });
+                        } else {
+                            layer.open({
+                                title: '评论失败',
+                                content: data.msg,
+                                icon: 5,
+                                anim:6
+                            });
+                        };
+                    }
+                });
+            } else {
+                layer.msg('请先登录', {
+                    icon: 5,
+                    time: 1000
+                }, function () {
+                    location.href = "{:url('index/index/login')}"
+                });
+            };
+            return false;
+        });
+    });
+</script>
+{/block}
